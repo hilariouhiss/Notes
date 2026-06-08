@@ -1,0 +1,31 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Markdown — primary content of this vault
+*.md text=auto diff=markdown
+
+# JSON config files
+*.json text=auto
+
+# JavaScript / TypeScript (for custom plugins)
+*.js   text=auto
+*.mjs  text=auto
+*.mts  text=auto
+*.ts   text=auto
+
+# CSS
+*.css text=auto
+
+# Shell scripts must use LF line endings
+*.sh text=auto eol=lf
+
+# Binary files
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+
+# Excalidraw files (JSON inside Markdown)
+*.excalidraw.md text=auto diff=markdown
