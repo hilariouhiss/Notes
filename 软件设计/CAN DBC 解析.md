@@ -1,4 +1,5 @@
 # CAN DBC 解析模块
+
 ## 1. 总体架构设计
 
 ### 1.1 分层架构
@@ -2371,7 +2372,7 @@ Application Thread -> Repository
 |`BitCodec`|Intel / Motorola，跨字节，有符号，边界位|
 |`PhysicalCodec`|factor / offset / min / max / signed|
 |`DbcLexer`|Token 识别，字符串，注释|
-|`DbcParser`|BO_ / SG_ / CM_ / VAL_ / Multiplex|
+|`DbcParser`|BO_/ SG_ / CM_/ VAL_ / Multiplex|
 |`SemanticAnalyzer`|重复信号，越界信号，DLC 校验|
 |`FrameDecoder`|Frame -> SignalValue|
 |`FrameEncoder`|SignalValue -> Frame|
