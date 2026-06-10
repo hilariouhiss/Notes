@@ -1,9 +1,8 @@
-# ============================================================
-# Obsidian
-# ============================================================
-.obsidian/
 # Obsidian trash folder
 .trash/
+
+# Obsidian workspace (device-specific window layout)
+.obsidian/workspace.json
 
 # ============================================================
 # OS generated files
