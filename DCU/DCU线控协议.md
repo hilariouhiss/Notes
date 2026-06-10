@@ -1,13 +1,13 @@
 # 希迪无人驾驶线控通讯协议 V1.0
 
 来源文件：`希迪无人驾驶线控通讯协议_V1.0.xlsx`
-## 一、 History
+## 一、History
 
 | Version | Date | Author | Reviewed by | Approved by | Section | Changes Comments |
 | --- | --- | --- | --- | --- | --- | --- |
 | V1.0    | 2026-03-04 | 谭佳鑫    | 盛维天         | 盛维天         | All     | 无人重卡平台线控通讯协议初版   |
 
-## 二、 Legend
+## 二、Legend
 
 > 本通信协议所有CAN报文均采用扩展帧形式
 
@@ -44,7 +44,7 @@
 | Check sum<br>校验和                         | 1.Length of Checksum=8 bits<br>2.The Checksum associated with an 8-bit signal shall be computed using the following algorithm:<br>Add the byte_0 to byte_7 excluded the Checksum byte.<br>This addition is done such that it produces an 8-bit result (i.e., any carry bits generated as part of the addition are discarded). The<br>Checksum is the 8-bit two’s complement of the sum.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | The two’s complement is computed by taking the bitwise inverse of the data, the result is treated as an 8-bit value (i.e., any carries<br>generated are ignored).<br>3.The receiver shall check the Checksum with every new received frame. The check shall be performed using the identical algorithm<br>used by the transmitter, An incorrect Checksum shall cause the receiver to detect a Checksum Error.<br>4. Error handle:The receiver shall ignore the message if Checksum Error.                                                                                                                                                                                                                                                                                                   |
 | Message Counter<br>报文计数                  | 1.Length of Message counter=4 bits<br>2.The task of initiating an update of the Message Counter value shall be carried out by the application software module responsible for<br>updating the data “protected” by the message counter,and shall only be initiated after the data has been updated. The update process<br>shall not be carried out exclusively by the communication handler or transport layer software modules. These requirements are intended<br>to ensure that the Message Counter value will only be updated if the application software has also correctly updated the protected data.<br>3.The transmitter shall update the value of the Message Counter signal every time a frame is transmitted (even if no other data in the<br>frame has changed value). The counter value shall be updated in the sequence 0, 1, 2, 3......15, 0, 1, 2, 3......15, etc. Upon startup,the<br>initial value of the Message Counter signal shall be 0.<br>4.The receiver should synchronize to the Message counter value that is initially received, and begin normal Message Counter processing.The following pseudocode describesthe operation of Message Counter initialization and the operation of Message counter Code processing:<br>Message Counter initialization<br>START<br>Wait for reception of first MsgC frame | Old_MsgC_Value = Received MsgC Value<br>Expected_MsgC_Value = (Old_MsgC_Value + 1) mod 16<br>Begin normal MsgC Processing<br>Normal Message Counter Processing<br>START (Note: Assumes value already stored in Expected_MsgC_Value)<br>MsgC_Error = FALSE<br>WHILE MsgC Processing Required<br>Wait for reception of new MsgC frame<br>New_MsgC_Value = Received MsgC Value<br>IF<br>New_MsgC_Value == Expected_MsgC_Value<br>THEN<br>MsgC_Error = FALSE<br>ELSE<br>MsgC_Error = TRUE<br>ENDIF<br>Expected_MsgC_Value = (New_MsgC_Value + 1) mod 16<br>END WHILE<br>5.The receiver shall check the Message Counter value with every new received frame. An incorrect<br>value (i.e., a value other than the expected value) shall cause the receiver to detect an Message<br>Counter Error. |
 
-## 三、 DCU线控协议
+## 三、DCU线控协议
 
 ### 3.1 报文索引
 

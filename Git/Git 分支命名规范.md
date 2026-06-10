@@ -1,6 +1,6 @@
 # Git 分支命名规范
 
-## 一、 核心前缀类型
+## 一、核心前缀类型
 
 | 前缀 | 用途 | 生命周期 | 源分支 | 目标分支 |
 |------|------|----------|--------|----------|
@@ -14,7 +14,7 @@
 | **`chore/`** | 构建脚本、依赖升级等杂项 | 随 MR 合并后删除 | `develop` | `develop` |
 | **`experiment/`** | 技术预研/POC（可能不合并） | 手动清理 | 任意 | 不合并 |
 
-## 二、 命名格式详解
+## 二、命名格式详解
 
 ### 2.1 基础格式
 
@@ -32,7 +32,7 @@
 | **`<description>`** | 简短描述，动词开头，说明做了什么 | `add-login-api`, `fix-memory-leak` |
 | **`<author>`** | 多人协作时标识开发者（可选） | `zhangsan`, `lhy` |
 
-## 三、 书写约定
+## 三、书写约定
 
 ### 3.1 分隔符
 - **必须使用**连字符 `-` 作为单词分隔符
@@ -61,7 +61,7 @@ feature/adduserauth            # 无分隔符，不可读
 - 使用**动词原形**开头（`add`, `fix`, `update`, `remove`, `refactor`）
 - 避免无意义词汇（`temp`, `test`, `xxx`, `final`, `final2`）
 
-## 四、 完整示例
+## 四、完整示例
 
 ### 4.1 功能开发
 ```bash
@@ -93,7 +93,7 @@ git checkout -b release/v2.3.0
 git checkout -b bugfix/v2.3.0-fix-api-docs
 ```
 
-## 五、 与 GitLab Issue 联动（最佳实践）
+## 五、与 GitLab Issue 联动（最佳实践）
 
 ### 5.1 自动关联
 若分支名包含 Issue ID，GitLab 可配置为**自动创建分支-Issue 关联**：
@@ -107,7 +107,7 @@ feature/123-add-oauth-login
 - MR 合并后，Issue `#123` 自动关闭（需在 MR 描述中写 `Closes #123`）
 - Issue 页面自动显示关联的分支和 MR
 
-## 六、 进阶：多环境/多版本管理
+## 六、进阶：多环境/多版本管理
 
 对于需要维护多个版本线的项目（如同时维护 v2.x 和 v3.x）：
 
@@ -117,7 +117,7 @@ git checkout -b bugfix/2.x-fix-security-patch   # 基于 release/v2.x
 git checkout -b bugfix/3.x-fix-security-patch   # 基于 release/v3.x
 ```
 
-## 七、 速查清单：创建分支前自检
+## 七、速查清单：创建分支前自检
 
 - [ ] 前缀是否来自标准列表（`feature/`, `bugfix/`, `hotfix/` 等）
 - [ ] 是否基于正确的源分支（`main`/`develop`/`release`）
@@ -126,7 +126,7 @@ git checkout -b bugfix/3.x-fix-security-patch   # 基于 release/v3.x
 - [ ] 总长度是否 ≤ 50 字符
 - [ ] 是否不含大写、下划线、空格、特殊符号
 
-## 八、 团队规范模板
+## 八、团队规范模板
 
 ```markdown
 ## 分支命名规范

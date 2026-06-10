@@ -6,7 +6,7 @@
 
 ---
 
-## 一、 迁移目标
+## 一、迁移目标
 
 1. 将现有 Ubuntu/KVM 上的所有虚拟机迁移到 Proxmox VE。
 2. 保留虚拟机系统盘、数据盘、MAC 地址、网络配置和关键业务数据。
@@ -20,7 +20,7 @@
 
 ---
 
-## 二、 重要风险说明
+## 二、重要风险说明
 
 ### 2.1 不建议原地安装 Proxmox VE
 
@@ -36,7 +36,7 @@
 
 ---
 
-## 三、 迁移前准备
+## 三、迁移前准备
 
 ### 3.1 准备外部备份介质
 
@@ -168,7 +168,7 @@ disk size: 95 GiB
 
 ---
 
-## 四、 重点处理 win11-2 卡死问题
+## 四、重点处理 win11-2 卡死问题
 
 `win11-2` 当前存在卡死，迁移前不要在运行状态下直接复制磁盘，否则容易得到不一致的磁盘镜像。
 
@@ -240,7 +240,7 @@ powercfg /h off
 
 ---
 
-## 五、 迁移前完整备份
+## 五、迁移前完整备份
 
 ### 5.1 停止所有虚拟机
 
@@ -313,7 +313,7 @@ sha256sum -c SHA256SUMS.txt
 
 ---
 
-## 六、 安装 Proxmox VE
+## 六、安装 Proxmox VE
 
 ### 6.1 下载 Proxmox VE ISO
 
@@ -391,7 +391,7 @@ apt update
 
 ---
 
-## 七、 Proxmox VE 网络规划
+## 七、Proxmox VE 网络规划
 
 ### 7.1 推荐网络结构
 
@@ -473,7 +473,7 @@ qm set 101 --net0 virtio=52:54:00:12:34:56,bridge=vmbr0
 
 ---
 
-## 八、 将备份数据传到 Proxmox VE
+## 八、将备份数据传到 Proxmox VE
 
 ### 8.1 使用 rsync 从旧 Ubuntu 拷贝到 Proxmox
 
@@ -500,7 +500,7 @@ rsync -aHAXS --numeric-ids --info=progress2 \
 
 ---
 
-## 九、 Proxmox VE 中创建虚拟机
+## 九、Proxmox VE 中创建虚拟机
 
 迁移原则：
 
@@ -516,7 +516,7 @@ rsync -aHAXS --numeric-ids --info=progress2 \
 
 ---
 
-## 十、 迁移 Windows 11 虚拟机 win11-2
+## 十、迁移 Windows 11 虚拟机 win11-2
 
 以下示例假设：
 
@@ -749,7 +749,7 @@ bcdboot C:\Windows /s S: /f UEFI
 
 ---
 
-## 十一、 迁移 Linux 虚拟机
+## 十一、迁移 Linux 虚拟机
 
 以下示例假设：
 
@@ -839,7 +839,7 @@ qm agent 102 ping
 
 ---
 
-## 十二、 批量迁移流程模板
+## 十二、批量迁移流程模板
 
 每台虚拟机按以下流程执行：
 
@@ -860,7 +860,7 @@ qm agent 102 ping
 
 ---
 
-## 十三、 libvirt XML 与 Proxmox 配置对应关系
+## 十三、libvirt XML 与 Proxmox 配置对应关系
 
 |libvirt/QEMU 项|Proxmox VE 配置|
 |---|---|
@@ -881,7 +881,7 @@ qm agent 102 ping
 
 ---
 
-## 十四、 配置虚拟机开机自启
+## 十四、配置虚拟机开机自启
 
 例如 `win11-2`：
 
@@ -905,7 +905,7 @@ qm set 102 --onboot 1 --startup order=2,up=30
 
 ---
 
-## 十五、 配置备份
+## 十五、配置备份
 
 ### 15.1 创建备份目录
 
@@ -968,7 +968,7 @@ ls -lh /backup/pve/dump/
 
 ---
 
-## 十六、 win11-2 稳定性优化建议
+## 十六、win11-2 稳定性优化建议
 
 迁移完成后，针对 `win11-2` 建议做以下优化。
 
@@ -1064,7 +1064,7 @@ cat /var/log/syslog | grep "101"
 
 ---
 
-## 十七、 防止再次强制断电导致 Windows 自动修复
+## 十七、防止再次强制断电导致 Windows 自动修复
 
 ### 17.1 启用 Guest Agent 后优雅关机
 
@@ -1120,7 +1120,7 @@ qm stop 101
 
 ---
 
-## 十八、 回滚方案
+## 十八、回滚方案
 
 在正式切换业务前，必须保留旧环境备份。
 
@@ -1165,7 +1165,7 @@ qm destroy 101 --purge
 
 ---
 
-## 十九、 推荐最终架构
+## 十九、推荐最终架构
 
 ```text
 Proxmox VE Host
@@ -1184,7 +1184,7 @@ Proxmox VE Host
 
 ---
 
-## 二十、 建议迁移顺序
+## 二十、建议迁移顺序
 
 1. 先迁移非关键 Linux VM。
 
@@ -1202,9 +1202,9 @@ Proxmox VE Host
 
 ---
 
-## 二十一、 常用命令汇总
+## 二十一、常用命令汇总
 
-## 二十二、 Ubuntu/KVM 侧
+## 二十二、Ubuntu/KVM 侧
 
 ```bash
 virsh list --all
@@ -1217,7 +1217,7 @@ virsh destroy VM名称
 
 ---
 
-## 二十三、 Proxmox VE 侧
+## 二十三、Proxmox VE 侧
 
 ```bash
 pveversion -v
@@ -1236,7 +1236,7 @@ vzdump VMID --storage 备份存储 --mode snapshot --compress zstd
 
 ---
 
-## 二十四、 win11-2 示例完整命令
+## 二十四、win11-2 示例完整命令
 
 请按实际 CPU、内存、MAC、磁盘路径修改。
 
@@ -1269,7 +1269,7 @@ qm start 101
 
 ---
 
-## 二十五、 结论
+## 二十五、结论
 
 本次迁移的核心不是简单复制磁盘，而是：
 

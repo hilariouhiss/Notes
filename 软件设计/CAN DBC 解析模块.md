@@ -1,8 +1,8 @@
 # CAN DBC 解析模块
 
-## 2. 整改后总体架构
+## 一、整改后总体架构
 
-### 2.1 新架构数据流
+### 1.1 新架构数据流
 
 ```text
 RX Path:
@@ -69,7 +69,7 @@ ICanSender.Send(frame, timeout)
 CAN Bus
 ```
 
-### 2.2 为什么要引入 `MessageResolver`
+### 1.2 为什么要引入 `MessageResolver`
 
 原设计由 `FrameDecoder` 直接调用：
 
@@ -92,9 +92,9 @@ Result<const Message*> MessageResolver::Resolve(const CanFrame& frame) const;
 
 ---
 
-## 3. 核心类型整改设计
+## 二、核心类型整改设计
 
-### 3.1 CAN 报文 key
+### 2.1 CAN 报文 key
 
 ```cpp
 namespace can_dbc {
@@ -151,7 +151,7 @@ Result<CanMessageKey> NormalizeDbcMessageId(std::uint32_t dbcId) {
 
 ---
 
-### 3.2 CAN FD frame 模型
+### 2.2 CAN FD frame 模型
 
 ```cpp
 struct CanFrame {
@@ -202,7 +202,7 @@ Result<std::uint8_t> LengthToDlc(std::uint8_t length) {
 
 ---
 
-### 3.3 J1939 ID 模型
+### 2.3 J1939 ID 模型
 
 ```cpp
 struct J1939Id {
@@ -259,7 +259,7 @@ public:
 
 ---
 
-### 3.4 Signal 唯一标识
+### 2.4 Signal 唯一标识
 
 ```cpp
 struct MessageId {
@@ -302,7 +302,7 @@ Result<SignalId> ResolveSignal(
 
 ---
 
-### 3.5 Runtime signal value
+### 2.5 Runtime signal value
 
 ```cpp
 enum class SignalQuality {
@@ -339,9 +339,9 @@ struct RuntimeSignalValue {
 
 ---
 
-## 4. DBC 数据模型整改
+## 三、DBC 数据模型整改
 
-### 4.1 Message
+### 3.1 Message
 
 ```cpp
 class Message final {
@@ -381,7 +381,7 @@ private:
 };
 ```
 
-### 4.2 DbcDatabase
+### 3.2 DbcDatabase
 
 ```cpp
 class DbcDatabase final {
@@ -428,9 +428,9 @@ private:
 
 ---
 
-## 5. DBC Parser 整改
+## 四、DBC Parser 整改
 
-### 5.1 Parser 分阶段目标
+### 4.1 Parser 分阶段目标
 
 ```text
 阶段 1：基础可用
@@ -465,7 +465,7 @@ private:
 - vendor-specific attributes
 ```
 
-### 5.2 SemanticAnalyzer 新增规则
+### 4.2 SemanticAnalyzer 新增规则
 
 必须校验：
 
@@ -489,9 +489,9 @@ private:
 
 ---
 
-## 6. BitCodec 整改
+## 五、BitCodec 整改
 
-### 6.1 保留原则
+### 5.1 保留原则
 
 `BitCodec` 继续保持纯函数：
 
@@ -503,7 +503,7 @@ private:
 输入相同，输出相同
 ```
 
-### 6.2 新增 compiled layout
+### 5.2 新增 compiled layout
 
 ```cpp
 struct CompiledSignalLayout {
@@ -537,7 +537,7 @@ Result<std::uint64_t> ExtractSignal(
 - 编译阶段可集中做 range 校验。
 - 更容易做 golden vector 测试。
 
-### 6.3 64-bit signed 修正
+### 5.3 64-bit signed 修正
 
 ```cpp
 struct SignedRawRange {
@@ -566,15 +566,15 @@ constexpr SignedRawRange GetSignedRawRange(std::uint16_t length) {
 
 ---
 
-## 7. PhysicalCodec 整改
+## 六、PhysicalCodec 整改
 
-### 7.1 不再抛异常
+### 6.1 不再抛异常
 
 ```cpp
 static Result<double> ToDouble(const SignalPhysicalValue& value);
 ```
 
-### 7.2 编码流程
+### 6.2 编码流程
 
 ```cpp
 Result<std::uint64_t> ToRaw(const Signal& signal, SignalPhysicalValue value) {
@@ -599,7 +599,7 @@ Result<std::uint64_t> ToRaw(const Signal& signal, SignalPhysicalValue value) {
 }
 ```
 
-### 7.3 Float32 / Float64
+### 6.3 Float32 / Float64
 
 ```cpp
 Result<SignalPhysicalValue> DecodeFloat(
@@ -628,9 +628,9 @@ Result<SignalPhysicalValue> DecodeFloat(
 
 ---
 
-## 8. Multiplex 整改
+## 七、Multiplex 整改
 
-### 8.1 数据模型
+### 7.1 数据模型
 
 ```cpp
 enum class MultiplexKind {
@@ -651,7 +651,7 @@ struct MultiplexInfo {
 };
 ```
 
-### 8.2 active 判断
+### 7.2 active 判断
 
 ```cpp
 bool IsSignalActive(
@@ -687,7 +687,7 @@ bool IsSignalActive(
 
 ---
 
-## 9. FrameDecoder 整改
+## 八、FrameDecoder 整改
 
 ```cpp
 class FrameDecoder final {
@@ -757,9 +757,9 @@ private:
 
 ---
 
-## 10. FrameEncoder 与 TxSignalStore 整改
+## 九、FrameEncoder 与 TxSignalStore 整改
 
-### 10.1 为什么拆出 TxSignalStore
+### 9.1 为什么拆出 TxSignalStore
 
 原设计中 `FrameEncoder` 从 `SignalRepository` 逐个读取信号。问题是：
 
@@ -783,7 +783,7 @@ struct TxMessageSnapshot {
 };
 ```
 
-### 10.2 默认值策略
+### 9.2 默认值策略
 
 ```cpp
 enum class MissingSignalPolicy {
@@ -814,7 +814,7 @@ public:
 5. Error，不建议静默置零
 ```
 
-### 10.3 Encoder active mux 逻辑
+### 9.3 Encoder active mux 逻辑
 
 ```cpp
 Result<CanFrame> FrameEncoder::BuildFrame(MessageId id) const {
@@ -870,9 +870,9 @@ Result<CanFrame> FrameEncoder::BuildFrame(MessageId id) const {
 
 ---
 
-## 11. SignalRepository 整改
+## 十、SignalRepository 整改
 
-### 11.1 接收侧 Repository
+### 10.1 接收侧 Repository
 
 ```cpp
 class SignalRepository final {
@@ -889,7 +889,7 @@ public:
 };
 ```
 
-### 11.2 订阅生命周期安全
+### 10.2 订阅生命周期安全
 
 ```cpp
 class Subscription final {
@@ -911,7 +911,7 @@ private:
 - 不捕获裸 `this`。
 - Repository 先析构时，Subscription 的 `Cancel()` 只会发现 weak_ptr 失效，不访问悬空对象。
 
-### 11.3 回调执行策略
+### 10.3 回调执行策略
 
 ```cpp
 enum class CallbackPolicy {
@@ -927,9 +927,9 @@ enum class CallbackPolicy {
 
 ---
 
-## 12. PeriodicScheduler 整改
+## 十一、PeriodicScheduler 整改
 
-### 12.1 修正 wait_until 唤醒问题
+### 11.1 修正 wait_until 唤醒问题
 
 ```cpp
 class PeriodicScheduler final {
@@ -997,7 +997,7 @@ void RunLoop() {
 }
 ```
 
-### 12.2 missed period 策略
+### 11.2 missed period 策略
 
 ```cpp
 enum class MissedPeriodPolicy {
@@ -1016,7 +1016,7 @@ enum class MissedPeriodPolicy {
 
 ---
 
-## 13. CAN Driver 接口整改
+## 十二、CAN Driver 接口整改
 
 ```cpp
 class ICanSender {
@@ -1072,9 +1072,9 @@ public:
 
 ---
 
-## 14. J1939 扩展设计
+## 十三、J1939 扩展设计
 
-### 14.1 单帧 PGN 解码
+### 13.1 单帧 PGN 解码
 
 ```cpp
 class J1939MessageResolver final {
@@ -1095,7 +1095,7 @@ public:
 };
 ```
 
-### 14.2 TP/BAM/RTS/CTS 扩展点
+### 13.2 TP/BAM/RTS/CTS 扩展点
 
 ```cpp
 class IJ1939TransportProtocol {
@@ -1121,7 +1121,7 @@ public:
 
 ---
 
-## 15. Error 设计整改
+## 十四、Error 设计整改
 
 ```cpp
 enum class ErrorCode {
@@ -1172,9 +1172,9 @@ struct Error {
 
 ---
 
-## 16. 测试策略整改
+## 十五、测试策略整改
 
-### 16.1 单元测试
+### 15.1 单元测试
 
 |模块|新增重点|
 |---|---|
@@ -1190,7 +1190,7 @@ struct Error {
 |`SignalRepository`|Subscription 生命周期、回调锁外执行|
 |`Scheduler`|动态新增更早任务、Stop、missed period|
 
-### 16.2 Golden tests
+### 15.2 Golden tests
 
 必须维护一组固定向量：
 
@@ -1221,7 +1221,7 @@ float32_float64.dbc
 6. 期望重新编码后的 bytes
 ```
 
-### 16.3 工具对齐测试
+### 15.3 工具对齐测试
 
 建议至少和一个外部成熟工具对齐：
 
@@ -1236,7 +1236,7 @@ Vector CANdb++ 导出的 reference
 - Round-trip 只能证明 encode/decode 自洽，不能证明位序正确。
 - Motorola bit numbering 必须有第三方或人工 golden vector 对齐。
 
-### 16.4 Sanitizer / 并发测试
+### 15.4 Sanitizer / 并发测试
 
 ```text
 ASAN: 检查 string_view、Subscription 生命周期、越界访问
@@ -1247,7 +1247,7 @@ Fuzz: DBC Lexer / Parser
 
 ---
 
-## 17. 推荐开发顺序整改
+## 十六、推荐开发顺序整改
 
 ```text
 1. 定义 CanMessageKey / CanFrame(length + dlcCode) / Error / Result。
@@ -1271,7 +1271,7 @@ Fuzz: DBC Lexer / Parser
 
 ---
 
-## 18. 整改后模块目录建议
+## 十七、整改后模块目录建议
 
 ```text
 can_dbc/
@@ -1356,9 +1356,9 @@ can_dbc/
 
 ---
 
-## 19. 最终设计取舍
+## 十八、最终设计取舍
 
-### 19.1 保留原设计的部分
+### 18.1 保留原设计的部分
 
 保留：
 
@@ -1375,7 +1375,7 @@ can_dbc/
 
 这些设计方向是正确的，整改不是推翻，而是强化生产可用性。
 
-### 19.2 变更较大的部分
+### 18.2 变更较大的部分
 
 变更：
 
@@ -1392,7 +1392,7 @@ can_dbc/
 
 ---
 
-## 20. 结论
+## 十九、结论
 
 整改后的设计更适合真实汽车电子项目：
 

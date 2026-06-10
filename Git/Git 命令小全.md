@@ -2,7 +2,7 @@
 
 > 一份覆盖日常开发、团队协作与救急场景的实用参考手册。
 
-## 一、 Git 简介
+## 一、Git 简介
 
 **Git** 是 Linus Torvalds 于 2005 年创建的一款**分布式版本控制系统**（DVCS）。与集中式版本控制（如 SVN）不同，Git 在每个开发者的本地都保存一份完整的代码仓库副本，包含全部历史记录，因此绝大多数操作都可以在本地离线完成，速度极快。
 
@@ -18,7 +18,7 @@
 
 **适用场景**：个人项目管理、团队协作开发、开源贡献、代码版本追溯、持续集成流水线等。
 
-## 二、 配置命令
+## 二、配置命令
 
 ### 2.1 基础配置
 
@@ -55,7 +55,7 @@ $ git config --global alias.lg "log --oneline --graph --decorate"
 $ git config --global color.ui auto
 ```
 
-## 三、 仓库操作
+## 三、仓库操作
 
 ### 3.1 创建与克隆
 
@@ -80,7 +80,7 @@ $ git clone -b develop https://github.com/user/repo.git
 $ git clone git@github.com:user/repo.git
 ```
 
-## 四、 日常 Workflow
+## 四、日常 Workflow
 
 ### 4.1 查看状态与差异
 
@@ -139,7 +139,7 @@ $ git commit --amend -m "新的提交信息"
 | `git rm --cached <file>` | 仅从 Git 跟踪中移除，保留本地文件 | 误将配置文件/敏感文件提交后移除跟踪 |
 | `git mv <old> <new>` | 重命名文件 | Git 会识别为 rename 而非 delete+add |
 
-## 五、 分支管理
+## 五、分支管理
 
 ### 5.1 查看分支
 
@@ -237,7 +237,7 @@ $ git rebase main
 
 **⚠️ 重要原则**：**不要对已经推送到远程的提交进行 rebase**，这会改写历史导致团队成员困扰。
 
-## 六、 远程协作
+## 六、远程协作
 
 ### 6.1 远程仓库管理
 
@@ -311,7 +311,7 @@ $ git switch -c feature/remote origin/feature/remote
 $ git switch feature/remote    # 自动建立跟踪
 ```
 
-## 七、 查看历史与追溯
+## 七、查看历史与追溯
 
 ### 7.1 提交日志
 
@@ -353,7 +353,7 @@ $ git log --oneline --graph --decorate --all
 | `git blame -L 10,20 <file>` | 仅查看文件的第 10-20 行 | 聚焦特定代码段的修改历史 |
 
 
-## 八、 撤销与恢复
+## 八、撤销与恢复
 
 ### 8.1 工作区撤销（未暂存）
 
@@ -411,7 +411,7 @@ $ git checkout abc1234          # 查看确认
 $ git switch -c recovery-branch  # 基于该提交创建分支
 ```
 
-## 九、 临时存储（Stash）
+## 九、临时存储（Stash）
 
 Stash 适用于：临时切换到其他分支处理紧急任务，但当前分支的改动还不适合提交。
 
@@ -439,7 +439,7 @@ $ git stash pop
 # 继续之前的工作
 ```
 
-## 十、 标签管理
+## 十、标签管理
 
 标签用于标记重要的里程碑（如版本发布）。
 
@@ -466,7 +466,7 @@ $ git log --oneline
 $ git tag -a v1.1.1 abc1234 -m "Patch release 1.1.1"
 ```
 
-## 十一、 高级操作
+## 十一、高级操作
 
 ### 11.1 拣选提交（Cherry-pick）
 
@@ -520,7 +520,7 @@ $ git rebase -i HEAD~4
 | `git clean -fd` | 删除未跟踪文件和目录 | 彻底清理 |
 
 
-## 十二、 团队协作工作流
+## 十二、团队协作工作流
 
 ### 12.1 Git Flow 工作流
 
@@ -578,7 +578,7 @@ $ git push origin main
 ```
 
 更多工作流说明请查看 [[GitLab 完整工作流操作手册]]
-## 十三、 救急
+## 十三、救急
 
 ### 13.1 常见事故处理
 
@@ -608,7 +608,7 @@ $ git clean -fd
 $ git checkout -- .
 ```
 
-## 十四、 提交信息规范（Conventional Commits）
+## 十四、提交信息规范（Conventional Commits）
 
 良好的提交信息提高代码审查效率，也便于自动生成 CHANGELOG。
 
@@ -625,7 +625,7 @@ $ git checkout -- .
 | `ci:` | 持续集成配置 | `ci: add GitHub Actions workflow` |
 更多分支命名和提交规范见：[[Git 分支命名规范]]
 
-## 十五、 附录：快速参考图
+## 十五、附录：快速参考图
 
 ```
 工作区 (Working Directory)

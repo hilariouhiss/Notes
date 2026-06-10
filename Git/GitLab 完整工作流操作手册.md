@@ -1,6 +1,6 @@
 # GitLab 完整工作流操作手册
 
-## 一、 前置准备
+## 一、前置准备
 
 ### 1.1 安装 Git
 ```bash
@@ -28,7 +28,7 @@ cat ~/.ssh/id_ed25519.pub
 # 将内容粘贴到 GitLab → User Settings → SSH Keys → Add new key
 ```
 
-## 二、 Fork 与 Clone
+## 二、Fork 与 Clone
 
 ### 2.1 Fork 仓库（针对他人仓库）
 
@@ -66,7 +66,7 @@ git remote -v
 # upstream  git@192.168.101.173:original-group/project.git (push)
 ```
 
-## 三、 本地开发工作流
+## 三、本地开发工作流
 
 ### 3.1 同步主分支（开始工作前）
 
@@ -94,7 +94,7 @@ git branch
 #   main
 ```
 
-## 四、 提交与推送
+## 四、提交与推送
 
 ### 4.1 修改代码
 
@@ -139,7 +139,7 @@ git push -u origin feature/login-module
 git push
 ```
 
-## 五、 创建 Merge Request
+## 五、创建 Merge Request
 
 ### 5.1 在 GitLab Web 界面操作
 
@@ -165,7 +165,7 @@ git push
 - 标题前缀加 `Draft:` 或 `WIP:`
 - 完成后编辑标题去掉前缀，转为正式 MR
 
-## 六、 代码审查与迭代
+## 六、代码审查与迭代
 
 ### 6.1 审查人进行 Code Review
 
@@ -199,7 +199,7 @@ git rebase -i HEAD~3
 git push --force-with-lease
 ```
 
-## 七、 合并到 main
+## 七、合并到 main
 
 ### 7.1 合并前检查
 
@@ -226,7 +226,7 @@ git push --force-with-lease
 - GitLab 自动关闭关联的 Issue（如描述中有 `Closes #123`）
 - 可选择 **Delete source branch** 自动删除远程功能分支
 
-## 八、 同步与清理
+## 八、同步与清理
 
 ### 8.1 更新本地 main
 
@@ -263,7 +263,7 @@ git pull origin main
 git checkout -b feature/next-module
 ```
 
-## 九、 附录：常见问题速查
+## 九、附录：常见问题速查
 
 | 问题             | 解决命令                                      |
 | ---------------- | --------------------------------------------- |
