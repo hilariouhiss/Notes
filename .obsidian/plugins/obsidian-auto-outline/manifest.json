@@ -1,11 +1,11 @@
 {
-	"id": "auto-outline",
-	"name": "Auto Outline",
-	"version": "1.0.0",
-	"minAppVersion": "1.0.0",
-	"description": "自动为标题添加编号并生成目录。",
-	"author": "刘海阳",
-	"authorUrl": "https://github.com/hilariouhiss/Obsidian-Auto-Outline",
-	"fundingUrl": "",
-	"isDesktopOnly": false
+    "id": "obsidian-auto-outline",
+    "name": "Auto Outline",
+    "version": "1.0.0",
+    "minAppVersion": "1.0.0",
+    "description": "自动为标题添加编号并生成目录。",
+    "author": "刘海阳",
+    "authorUrl": "https://github.com/hilariouhiss/Obsidian-Auto-Outline",
+    "fundingUrl": "",
+    "isDesktopOnly": false
 }
