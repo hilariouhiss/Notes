@@ -85,5 +85,14 @@
       ],
       "key": "2"
     }
+  ],
+  "obsidian-auto-outline:auto-numbering": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "N"
+    }
   ]
 }
