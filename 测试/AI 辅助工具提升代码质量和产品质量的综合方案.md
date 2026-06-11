@@ -141,7 +141,8 @@ void process_sensor(const driver_if_t* drv) {
 
 这些工具能够发现输入验证不足或缓冲区溢出等问题，从而提前暴露潜在安全隐患。实际测试中，可结合硬件传感器（如文献所示的传感器测试夹具）或在软件在环（SiL）环境监控模拟输出，定义缺陷判定基准。
 
-**报文模糊示例：** 可用 Python + SocketCAN 简单实现：```python
+**报文模糊示例：** 可用 Python + SocketCAN 简单实现：
+```python
 import can, random
 
 bus = can.interface.Bus(channel='can0', bustype='socketcan')
@@ -153,7 +154,7 @@ for _ in range(1000):
 ```  
 监控接收并记录任何异常响应。如使用 Can-Hax，可通过命令行参数控制模糊策略（例如 `can-hax --canid 0x123` 只针对 ID 0x123）。
 
-## 4. CI/CD 集成与示例
+## 四、CI/CD 集成与示例
 
 将上述工具与 GitLab CE 集成，实现真正的**每次提交即验证**是关键。除了前述的 Ceedling 示例外，对于 Simulink 模型开发者，MathWorks 提供的 **Simulink CI 支持包** 可以自动生成 GitLab CI 配置：其中内置对 Model Advisor (ISO 26262 检查)、Simulink Test 单元/模型测试、Embedded Coder 代码生成等任务的支持，避免手写脚本。典型流水线示例如下：
 
@@ -198,15 +199,15 @@ coverage_report:
 ```mermaid
 graph LR
   A[源代码/模型提交] --> B[代码编译与静态分析]
-  B --> C[单元测试 (Ceedling/Simulink Test)]
-  C --> D[集成测试 (CAN/J1939)]
+  B --> C[单元测试 Ceedling/Simulink Test]
+  C --> D[集成测试 CAN/J1939]
   D --> E[报告生成/验证]
-  E --> F[合并或驳回(MR)]
+  E --> F[合并或驳回 MR]
 ```
 
 每个阶段完成后，可将测试报告和覆盖率数据作为工件（Artifacts）保存，实现质量可视化与追溯。
 
-## 实施路线图与关键指标
+## 五、实施路线图与关键指标
 
 **路线图分层：** 推荐采用**分阶段实施**策略。第一阶段（试点）选取一个或两个代表性模块（如车灯控制 BCM 或电机控制 DCM）作为试点，将单元测试、静态分析和简单的 CAN 测试脚本引入开发流程。并行进行开发团队培训，讲解 Ceedling 使用、CI 配置等。第二阶段（扩展）在试点成功后，将测试框架扩展至整个开发组，增加对更多模块（如 VCU、仿真模型）的覆盖，并引入更高级的测试（如模糊测试、Simulink CI 支持包）。最后一个阶段为**持续改进**：定期评估效果，完善规则，自动化报告，提高自动化程度。
 

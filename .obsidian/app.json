@@ -1,5 +1,5 @@
 {
   "showInlineTitle": false,
-  "readableLineLength": true,
+  "readableLineLength": false,
   "promptDelete": false
 }
