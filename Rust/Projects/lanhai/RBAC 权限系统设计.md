@@ -1,6 +1,6 @@
 # RBAC 权限系统设计文档
 
-## 1. 文档目标
+## 一、文档目标
 
 本文档描述一套基于 **PostgreSQL 18** 的生产级 RBAC（Role-Based Access Control，基于角色的访问控制）权限系统设计。
 
@@ -22,9 +22,9 @@
 
 ---
 
-# 2. 总体架构设计
+## 二、总体架构设计
 
-## 2.1 RBAC 模型
+### 2.1 RBAC 模型
 
 系统采用标准 RBAC 模型：
 
@@ -46,7 +46,7 @@ User → UserRole → Role → RolePermission → Permission
 
 ---
 
-## 2.2 权限编码设计
+### 2.2 权限编码设计
 
 权限是系统中最小的授权单元，使用唯一权限编码表示。
 
@@ -82,9 +82,9 @@ system:config
 
 ---
 
-## 2.3 设计原则
+## 三、设计原则
 
-### 2.3.1 用户不直接绑定权限
+### 3.1 用户不直接绑定权限
 
 用户不直接拥有权限，而是通过角色间接获得权限。
 
@@ -97,7 +97,7 @@ system:config
 
 ---
 
-### 2.3.2 超级管理员通过角色实现
+### 3.2 超级管理员通过角色实现
 
 推荐使用系统内置角色实现超级管理员：
 
@@ -121,7 +121,7 @@ users.is_super_admin
 
 ---
 
-### 2.3.3 软删除策略
+### 3.3 软删除策略
 
 核心业务表均使用：
 
@@ -147,7 +147,7 @@ deleted_by
 
 ---
 
-### 2.3.4 审计字段
+### 3.4 审计字段
 
 核心表统一包含：
 
@@ -175,7 +175,7 @@ users.id
 
 ---
 
-# 3. ER 图
+## 四、ER 图
 
 ```mermaid
 erDiagram
@@ -261,9 +261,9 @@ erDiagram
 
 ---
 
-# 4. 表结构设计
+## 五、表结构设计
 
-## 4.1 users
+### 5.1 users
 
 用户表。
 
@@ -286,7 +286,7 @@ erDiagram
 
 ---
 
-## 4.2 roles
+### 5.2 roles
 
 角色表。
 
@@ -310,7 +310,7 @@ erDiagram
 
 ---
 
-## 4.3 permission_groups
+### 5.3 permission_groups
 
 权限分组表。
 
@@ -339,7 +339,7 @@ erDiagram
 
 ---
 
-## 4.4 permissions
+### 5.4 permissions
 
 权限表。
 
@@ -378,7 +378,7 @@ erDiagram
 
 ---
 
-## 4.5 user_roles
+### 5.5 user_roles
 
 用户角色关联表。
 
@@ -400,7 +400,7 @@ erDiagram
 
 ---
 
-## 4.6 role_permissions
+### 5.6 role_permissions
 
 角色权限关联表。
 
@@ -421,7 +421,7 @@ erDiagram
 
 ---
 
-# 5. PostgreSQL 18 DDL
+## 六、PostgreSQL 18 DDL
 
 ```sql
 CREATE SCHEMA IF NOT EXISTS iam;
@@ -977,9 +977,9 @@ CREATE INDEX idx_rbac_audit_logs_action_created_at
 
 ---
 
-# 6. 常用查询 SQL
+## 七、常用查询 SQL
 
-## 6.1 查询用户全部角色
+### 7.1 查询用户全部角色
 
 ```sql
 SELECT r.id,
@@ -1005,7 +1005,7 @@ ORDER BY r.sort_order ASC, r.created_at DESC;
 
 ---
 
-## 6.2 查询用户全部权限
+### 7.2 查询用户全部权限
 
 ```sql
 WITH active_user AS (SELECT u.id
@@ -1063,7 +1063,7 @@ ORDER BY p.sort_order ASC, p.code ASC;
 
 ---
 
-## 6.3 判断用户是否具有某权限
+### 7.3 判断用户是否具有某权限
 
 示例权限：
 
@@ -1123,7 +1123,7 @@ SELECT EXISTS (SELECT 1
 
 ---
 
-## 6.4 给用户授权角色
+### 7.4 给用户授权角色
 
 ```sql
 INSERT INTO iam.user_roles (user_id,
@@ -1158,7 +1158,7 @@ RETURNING *;
 
 ---
 
-## 6.5 撤销用户角色
+### 7.5 撤销用户角色
 
 ```sql
 UPDATE iam.user_roles
@@ -1183,7 +1183,7 @@ RETURNING *;
 
 ---
 
-## 6.6 给角色授权权限
+### 7.6 给角色授权权限
 
 ```sql
 INSERT INTO iam.role_permissions (role_id,
@@ -1214,7 +1214,7 @@ RETURNING *;
 
 ---
 
-## 6.7 撤销角色权限
+### 7.7 撤销角色权限
 
 ```sql
 UPDATE iam.role_permissions
@@ -1239,9 +1239,9 @@ RETURNING *;
 
 ---
 
-# 7. 性能优化设计
+## 八、性能优化设计
 
-## 7.1 核心查询路径
+### 8.1 核心查询路径
 
 RBAC 高频查询路径主要有：
 
@@ -1262,7 +1262,7 @@ permission_code → permissions
 
 ---
 
-## 7.2 软删除索引策略
+### 8.2 软删除索引策略
 
 常见查询均需要过滤：
 
@@ -1284,7 +1284,7 @@ WHERE deleted_at IS NULL
 
 ---
 
-## 7.3 百万用户规模优化
+### 8.3 百万用户规模优化
 
 百万用户规模下，不建议每次接口请求都实时查询 PostgreSQL 多表 JOIN。
 
@@ -1298,7 +1298,7 @@ WHERE deleted_at IS NULL
 
 ---
 
-## 7.4 Redis 权限缓存策略
+### 8.4 Redis 权限缓存策略
 
 推荐缓存用户权限集合：
 
@@ -1324,7 +1324,7 @@ SISMEMBER rbac:user:0197xxxx:permissions user:update
 
 ---
 
-## 7.5 缓存失效策略
+### 8.5 缓存失效策略
 
 | 事件      | 处理               |
 |---------|------------------|
@@ -1338,7 +1338,7 @@ SISMEMBER rbac:user:0197xxxx:permissions user:update
 
 ---
 
-## 7.6 权限版本号策略
+### 8.6 权限版本号策略
 
 建议维护权限版本号：
 
@@ -1369,9 +1369,9 @@ JWT perm_ver == Redis perm_ver
 
 ---
 
-# 8. 安全设计
+## 九、安全设计
 
-## 8.1 超级管理员
+### 9.1 超级管理员
 
 超级管理员通过角色实现：
 
@@ -1389,7 +1389,7 @@ roles.is_system = true
 
 ---
 
-## 8.2 权限提升防护
+### 9.2 权限提升防护
 
 必须防止普通管理员进行以下操作：
 
@@ -1409,7 +1409,7 @@ roles.is_system = true
 
 ---
 
-## 8.3 系统角色保护
+### 9.3 系统角色保护
 
 对于：
 
@@ -1426,7 +1426,7 @@ roles.is_system = true
 
 ---
 
-## 8.4 审计日志
+### 9.4 审计日志
 
 所有敏感操作必须写入 `rbac_audit_logs`。
 
@@ -1464,9 +1464,9 @@ roles.is_system = true
 
 ---
 
-# 9. JWT 权限校验流程
+## 十、JWT 权限校验流程
 
-## 9.1 JWT 内容建议
+### 10.1 JWT 内容建议
 
 不建议在 JWT 中存放完整权限列表。
 
@@ -1485,7 +1485,7 @@ roles.is_system = true
 
 ---
 
-## 9.2 请求鉴权流程
+### 10.2 请求鉴权流程
 
 ```text
 1. API Gateway / Middleware 校验 JWT 签名
@@ -1503,7 +1503,7 @@ roles.is_system = true
 
 ---
 
-## 9.3 接口权限绑定示例
+### 10.3 接口权限绑定示例
 
 | API                      | 权限编码            |
 |--------------------------|-----------------|
@@ -1519,9 +1519,9 @@ roles.is_system = true
 
 ---
 
-# 10. 后端集成建议
+## 十一、后端集成建议
 
-## 10.1 Spring Boot
+### 11.1 Spring Boot
 
 建议实现：
 
@@ -1543,7 +1543,7 @@ JWT 校验
 
 ---
 
-## 10.2 Rust Axum
+### 11.2 Rust Axum
 
 建议实现：
 
@@ -1561,7 +1561,7 @@ check required permission
 
 ---
 
-## 10.3 Go Gin
+### 11.3 Go Gin
 
 建议实现中间件：
 
@@ -1580,7 +1580,7 @@ func RequirePermission(code string) gin.HandlerFunc
 
 ---
 
-# 11. 关键设计决策总结
+## 十二、关键设计决策总结
 
 | 决策                                 | 原因                           |
 |------------------------------------|------------------------------|
@@ -1597,9 +1597,9 @@ func RequirePermission(code string) gin.HandlerFunc
 
 ---
 
-# 12. 后续可扩展方向
+## 十三、后续可扩展方向
 
-## 12.1 多租户 SaaS
+### 13.1 多租户 SaaS
 
 如需支持多租户，建议增加：
 
@@ -1630,7 +1630,7 @@ tenant_id + email
 
 ---
 
-## 12.2 数据权限
+### 13.2 数据权限
 
 可在 `permissions.permission_type = 'data'` 基础上扩展：
 
@@ -1656,7 +1656,7 @@ role_data_scopes
 
 ---
 
-## 12.3 组织架构权限
+### 13.3 组织架构权限
 
 可增加：
 
@@ -1674,7 +1674,7 @@ user_departments
 
 ---
 
-## 12.4 权限模板
+### 13.4 权限模板
 
 大型 SaaS 系统可以增加：
 
@@ -1687,9 +1687,9 @@ role_template_permissions
 
 ---
 
-# 13. 推荐落地顺序
+## 十四、推荐落地顺序
 
-## 阶段一：基础 RBAC
+### 14.1 阶段一：基础 RBAC
 
 * `users`
 * `roles`
@@ -1698,21 +1698,21 @@ role_template_permissions
 * `user_roles`
 * `role_permissions`
 
-## 阶段二：安全增强
+### 14.2 阶段二：安全增强
 
 * 超级管理员保护
 * 审计日志
 * 系统角色保护
 * 权限提升防护
 
-## 阶段三：性能优化
+### 14.3 阶段三：性能优化
 
 * Redis 权限缓存
 * 权限版本号
 * 审计日志分区
 * 读写分离
 
-## 阶段四：SaaS 扩展
+### 14.4 阶段四：SaaS 扩展
 
 * 多租户
 * 数据权限
@@ -1721,7 +1721,7 @@ role_template_permissions
 
 ---
 
-# 14. 结论
+## 十五、结论
 
 本 RBAC 设计适用于企业级后台管理系统、SaaS 平台、微服务权限中心和多语言后端项目。
 
